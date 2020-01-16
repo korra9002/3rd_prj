@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prj.mapper.MypageMapper">
+  <select id="selectAllCard" resultType="kr.co.prj.domain.MyCardDomain" parameterType="String">
+   select card_type, ex_date, card_info_code, card_num4
+   from   card_info c, card_type t
+   where  user_id =#{user_id} and c.card_type_code = t.card_type_code
+  </select>
+  
+  <select id="selectQna" resultType="kr.co.prj.domain.MypageQnaDomain" parameterType="String">
+   	select q_subject, q_answer_flag, to_char(q_input_date,'yyyy-mm-dd') q_input_date, q_num
+   	from qna
+   	where user_id like #{memberId} order by q_num desc
+  </select>
+  
+  <select id="memberInfo" resultType="kr.co.prj.domain.MypageDomain" parameterType="String">
+	select user_id, user_name, email, phone,hint_code
+	from MEMBER_INFO
+	where user_id = #{memberId}
+  </select>
+  
+ <delete id="deleteCard" parameterType="String">
+ 	delete from card_info
+ 	where card_info_code=#{card_info_code}
+ </delete>
+ 
+<select id="passwdChk" resultType="java.lang.String" parameterType="kr.co.prj.vo.LoginVO">
+	SELECT USER_ID 
+	FROM MEMBER_INFO 
+	WHERE USER_ID=#{inputId} AND PASSWORD=#{inputPassword}
+</select>
+  
+ <update id="modifyInfo" parameterType="kr.co.prj.vo.modifyInfoVO">
+ 	UPDATE MEMBER_INFO
+	SET
+	<if test="password !=null and password !=''">
+	 PASSWORD=#{password},
+	</if> 
+	 EMAIL=#{email}, PHONE =#{phone}, HINT_CODE=#{hint_code}
+	<if test="answer != null and answer !=''">
+	, ANSWER=#{answer}
+	</if>
+	WHERE USER_ID =#{user_id} and PASSWORD=#{curPassword}
+ </update>
+</mapper>

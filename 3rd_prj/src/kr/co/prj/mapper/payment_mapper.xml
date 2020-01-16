@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prj.dao.PaymentMapper"> 
+
+
+<select id="accountList"  resultType="kr.co.prj.domain.AccountListDomain">
+	select BANK, ACCOUNT_NUMBER 
+	from ACCOUNT
+</select>
+
+<select id="selectCard" resultType="kr.co.prj.domain.CardListDomain" parameterType="String">
+   select card_type, ex_date, card_info_code, card_num4
+   from   card_info c, card_type t
+   where  user_id =#{user_id} and c.card_type_code = t.card_type_code
+ </select>
+
+<update id="payForCard" parameterType="kr.co.prj.vo.PayForCardVO">
+	update		reservation
+	set		   PAY_STATUS='Y', PAY_METHOD='C', PAY_DATE=sysdate, CARD_INFO_CODE=#{cardCod}
+	where			RESERVATION_NUM=#{ rNum }
+</update>
+
+
+<update id="payForBank1" parameterType="kr.co.prj.vo.PayForBankVO">
+	update		reservation
+	set		   PAY_STATUS='D', PAY_METHOD='B'
+	where			RESERVATION_NUM=#{ rNum }
+</update>
+
+<insert id="payForBank2" parameterType="kr.co.prj.vo.PayForBankVO">
+insert into	 DEPOSIT(bank, deposit_flag, deposit_period, reservation_num)   
+values(#{bank}, 'N', sysdate ,#{ rNum })
+</insert>
+
+<select id="bankInfo" resultType="kr.co.prj.domain.BankInfoDomain" parameterType="String">
+select   reservation_num , deposit_flag, deposit_period,d.bank, account_number
+from   DEPOSIT d,ACCOUNT a
+where   d.bank = a.bank and reservation_num =#{rNum}
+ </select>
+
+
+
+
+</mapper>
+
+
+

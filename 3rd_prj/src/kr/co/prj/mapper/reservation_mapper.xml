@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prj.mapper.ReservationMapper">
+  <select id="selectRoomCharge" resultType="int" parameterType="String">
+    SELECT CHARGE
+    FROM ROOM_INFO
+    WHERE ROOM_NAME=#{ ROOM_NAME }
+  </select>
+  
+  
+  	<select id="reservation" resultType="kr.co.prj.vo.ReservationTotalVO" parameterType="String">
+	select RESERVATION_NUM, USER_ID, USE_DATE, NAME, PHONE, EMAIL, CHARGE, PAY_STATUS, PAY_METHOD, PAY_DATE, RESERVATION_DATE, REQUIRE, CARD_INFO_CODE
+	from RESERVATION
+	where reservation_num =#{ rNum}   
+	</select>
+	
+	  <resultMap type="kr.co.prj.vo.ReservationTotalVO" id="rtVO">
+	<result column="reservation_num" property="reservation_num"/>
+	<result column="user_id" property="user_id"/>
+	<result column="use_date" property="use_date"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="name" property="name"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="phone" property="phone"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="email" property="email"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="pay_status" property="pay_status"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="pay_method" property="pay_method"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="pay_date" property="pay_date"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="reservation_date" property="reservation_date"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="require" property="require"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="card_info_code" property="card_info_code"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+	<result column="charge" property="charge"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+</resultMap>
+	
+	
+		<select id="reservation2" resultMap="rtVO" parameterType="String">
+	select RESERVATION_NUM, USER_ID, USE_DATE, NAME, PHONE, EMAIL, CHARGE, PAY_STATUS, PAY_METHOD, PAY_DATE, RESERVATION_DATE, REQUIRE, CARD_INFO_CODE
+	from RESERVATION
+	where user_id =#{ id} order by reservation_num desc  
+	</select>
+  
+  <resultMap type="kr.co.prj.vo.RTimeVO" id="rTimeList">
+	<result column="reservation_num" property="reservation_num"/>
+	<result column="r_realTime" property="realtime"/>
+	<result column="r_time" property="time"/><!-- property 두번째 단어부터는 대소문자 가려야해 -->
+</resultMap>
+  
+  
+  <select id="rTime" resultMap="rTimeList" parameterType="String">
+	<!-- parameterMap은 권장 ㄴㄴ해~ -->
+	select r.reservation_num, r_realTime, r.r_time
+ from RESERVATION_INFO r, reservation_time t where reservation_num =#{ rNum}  and r.r_time=t.r_time
+ order by t.r_time
+	</select>
+	
+<resultMap type="kr.co.prj.domain.DiaryDomain" id="diaryList">
+	<result column="reservation_num" property="reservation_num"/>
+	<result column="r_time" property="r_time"/>
+	<result column="day" property="day"/>
+	<result column="user_id" property="user_id"/>
+</resultMap>
+	
+<select id="diaryList" resultMap="diaryList" parameterType="kr.co.prj.vo.DiarySearchVO">
+ select  i.reservation_num,r_time,day ,user_id
+ from RESERVATION_INFO i, reservation r
+ where i.reservation_num =r.reservation_num and room_name=#{roomName} 
+ 	   and year=#{year} and month=#{month} order by day, r_time
+</select>
+	
+  
+  
+</mapper>

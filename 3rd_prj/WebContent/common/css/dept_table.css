@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+#numTitle {
+	width: 80px;
+	height: 25px
+}
+
+#dnameTitle {
+	width: 400px;
+	height: 25px
+}
+
+
+#locTitle {
+	width: 150px;
+	height: 25px
+}
+
+td {
+	text-align: center
+}
+
+Table {
+	border-top: 2px solid #CD718E;
+	border-bottom: 1px solid #CD718E;
+	border-spacing: 0px
+}
+
+th {
+	background-color: #FFC87E;
+	border-bottom: 1px solid #CD718E;
+}
+
+td {
+	border-top: 1px solid #CD718E;
+	height: 25px
+}
+
+tr:hover {
+	background-color: #FFF7FB
+}

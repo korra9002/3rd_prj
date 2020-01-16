@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prj.mapper.RoomInfoMapper">
+<!-- resultMap 필요없음. 도메인으로 됨 -->
+<!-- 조회컬럼과  setter method를 미리 매핑 시키는 resultMap을 사용 -->
+<!-- <resultMap type="kr.co.prj.domain.RoomInfoDomain" id="RoomListMap">
+	<result column="room_name" property="room_name"/>
+	<result column="room_name2" property="room_name2"/>
+	<result column="person_num" property="person_num"/>
+	<result column="info" property="info"/>
+	<result column="brief_info" property="brief_info"/>
+	<result column="charge" property="charge"/>
+	<result column="image1" property="image1"/>
+	<result column="image2" property="image2"/>
+	<result column="image3" property="image3"/>
+	<result column="concept_name" property="concept_name"/>
+</resultMap> --> 
+<!-- QnA테이블에서 번호,제목,작성일,답변플래그를 받아온다. -->
+<select id="RoomInfoList" resultType="kr.co.prj.domain.RoomInfoDomain">
+	SELECT ROOM_NAME, ROOM_NAME2, PERSON_NUM, INFO, BRIEF_INFO, CHARGE, IMAGE1, IMAGE2, IMAGE3, CONCEPT_NAME
+	FROM ROOM_INFO
+	ORDER BY ROOM_NAME 
+</select>
+</mapper>
+
+
+

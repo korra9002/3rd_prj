@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+body, h1, h2, h3, div, ul, ol, li, form, input {
+	margin: 0px;
+	padding: 0px
+}
+
+fieldset, img {
+	border: 0px
+}
+
+ul, ol, li {
+	list-style: none
+}
+
+body, th, td, input, select, textarea, button {
+	font-size: 13px;
+	line-height: 1.5;
+	font-family: '맑은 고딕', dotum, sans-serif;
+	color: #333;
+}
+
+a {
+	color: #222;
+	text-decoration: none
+}
+
+a:hover {
+	color: #118eff;
+	text-decoration: underline
+}
+
+address {
+	font-style: normal;
+	font-weight: normal
+}
+
+.inputBox {
+	border: 1px solid #B4B4B4;
+}
+
+.btn {
+	border: 1px solid #B4B4B4;
+	background-color: #FFFFFF;
+	padding-left: 3px;
+	padding-right: 3px;
+	cursor: pointer;
+}
+
+.red {
+	color: #FF0000
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prj.dao.QnAMapper">
+<!-- 조회컬럼과  setter method를 미리 매핑 시키는 resultMap을 사용 -->
+<resultMap type="kr.co.prj.domain.QnAListDomain" id="qnaListMap">
+	<result column="q_num" property="num"/>
+	<result column="user_id" property="id"/>
+	<result column="q_subject" property="subject"/>
+	<result column="q_input_date" property="input_date"/>
+	<result column="q_answer_flag" property="answer_flag"/>
+</resultMap>
+<!-- QnA테이블에서 번호,제목,작성일,답변플래그를 받아온다. -->
+<select id="qnaList" resultMap="qnaListMap" parameterType="kr.co.prj.vo.SearchVO">
+	select  Q_NUM,USER_ID,Q_SUBJECT,TO_CHAR(Q_INPUT_DATE,'YYYY-MM-DD HH24:MI')Q_INPUT_DATE,Q_ANSWER_FLAG 
+	from (select rownum rnum,  Q_NUM,USER_ID,Q_SUBJECT,Q_INPUT_DATE,Q_ANSWER_FLAG 
+	from (select  Q_NUM,USER_ID,Q_SUBJECT,Q_INPUT_DATE,Q_ANSWER_FLAG
+	from qna 
+	<if test="field!=null and keyword!=null">
+	where  ${field} like '%'||#{keyword}||'%'
+	</if>
+	order by q_num desc))
+	where rnum between #{startNum} and #{endNum}
+</select>
+<select id="qnaPost" resultType="qbdd" parameterType="int">
+	SELECT Q_NUM,Q_SUBJECT,Q_CONTENT,TO_CHAR(Q_INPUT_DATE,'YYYY-MM-DD HH24:MI')Q_INPUT_DATE,USER_ID ,Q_ANSWER_FLAG,Q_ANSWER,TO_CHAR(Q_ANSWER_DATE,'YYYY-MM-DD HH24:MI')Q_ANSWER_DATE
+	FROM QNA
+	WHERE Q_NUM=#{q_num}
+	
+</select>
+<select id="qnaTotalCount" resultType="int" parameterType="kr.co.prj.vo.SearchVO" >
+select count(q_num)cnt 
+from qna 
+<where>
+		<if test="field!=null and keyword!=null">
+				${field} like '%'||#{keyword}||'%'
+		</if>	
+</where>
+
+
+
+</select>
+
+<insert id="writePost"  parameterType="kr.co.prj.vo.QnAWriteVO">
+insert 
+into 
+qna(q_num,user_id,q_input_date,q_subject,q_content,q_answer_flag) 
+values
+(seq_qna_board.nextval,#{user_id},sysdate,#{q_subject},#{q_content},'N')
+</insert>
+<delete id="deletePost" parameterType="int">
+delete 
+from qna 
+where q_num = #{q_num}
+</delete>
+<update id="updatePost" parameterType="kr.co.prj.vo.QnAModifyVO">
+update qna
+set q_content=#{q_content}, q_subject=#{q_subject}
+where q_num= #{q_num}
+</update>
+<update id="updateRp" parameterType="kr.co.prj.vo.QnAAddRpVO">
+update qna
+set q_answer_flag='Y', q_answer=#{q_answer},q_answer_date=sysdate
+where q_num= #{q_num}
+</update>
+<update id="rpModify" parameterType="kr.co.prj.vo.RpModifyVO">
+update qna
+set q_answer=#{q_answer},q_answer_date=sysdate
+where q_num= #{q_num}
+</update>
+
+</mapper>
+
+
+

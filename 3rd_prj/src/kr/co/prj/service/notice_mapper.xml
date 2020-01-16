@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prj.dao.NoticeMapper">
+<!-- 조회컬럼과  setter method를 미리 매핑 시키는 resultMap을 사용 -->
+<resultMap type="kr.co.prj.domain.NoticeListDomain" id="noticeListMap">
+	<result column="n_num" property="num"/>
+	<result column="n_subject" property="subject"/>
+	<result column="n_input_date" property="input_date"/>
+	<result column="n_delete_flag" property="delete_flag"/>
+</resultMap>
+<!-- QnA테이블에서 번호,제목,작성일,답변플래그를 받아온다. -->
+
+<select id="noticeList" resultMap="noticeListMap" parameterType="kr.co.prj.vo.SearchVO">
+	select  n_NUM,n_SUBJECT,TO_CHAR(n_INPUT_DATE,'YYYY-MM-DD HH24:MI')n_INPUT_DATE,n_delete_flag
+	from (select rownum rnum,  n_NUM,n_SUBJECT,n_INPUT_DATE,n_delete_flag
+	from (select  n_NUM,n_SUBJECT,n_INPUT_DATE,n_delete_flag
+	from notice
+	<if test="field!=null and keyword!=null">
+	where  ${field} like '%'||#{keyword}||'%'
+	</if>
+	order by n_num desc))
+	where rnum between #{startNum} and #{endNum}
+</select>
+<select id="noticeTotalCount" resultType="int" parameterType="kr.co.prj.vo.SearchVO" >
+select count(n_num)cnt 
+from notice 
+<where>
+				<if test="field!=null">
+					<if test="keyword!=null">
+					${field} like '%'||#{keyword}||'%'
+					</if>
+				</if>	
+			</where>
+
+
+
+</select>
+<select id="noticePost" resultType="nbdd" parameterType="int">
+ SELECT N_NUM,N_SUBJECT,N_CONTENT,N_INPUT_DATE,N_DELETE_FLAG	
+FROM	NOTICE
+WHERE N_NUM=#{num}
+</select>
+
+<insert id="n_writePost"  parameterType="kr.co.prj.vo.NoticeWriteVO">
+insert 
+into 
+notice(n_num,n_input_date,n_subject,n_content,n_delete_flag) 
+values
+(seq_notice_board.nextval,sysdate,#{n_subject},#{n_content},'N')
+</insert>
+<delete id="n_deletePost" parameterType="int">
+delete 
+from notice 
+where n_num = #{n_num}
+</delete>
+<update id="n_updatePost" parameterType="kr.co.prj.vo.NoticeModifyVO">
+update notice
+set n_content=#{n_content}, n_subject=#{n_subject},n_input_date=sysdate
+where n_num= #{n_num}
+</update>
+</mapper>
+
+
+

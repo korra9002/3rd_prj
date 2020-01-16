@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prj.mapper.RsvInputMapper">
+  <select id="selectRoomCharge" resultType="int" parameterType="String">
+    SELECT CHARGE
+    FROM ROOM_INFO
+    WHERE ROOM_NAME=#{ ROOM_NAME }
+  </select>
+  
+  
+  <insert id="insertReservation" parameterType="kr.co.prj.vo.ReservationVO">
+  INSERT INTO RESERVATION(reservation_num,USER_ID,USE_DATE,NAME,PHONE,EMAIL,	CHARGE,	RESERVATION_DATE, PAY_STATUS, REQUIRE)
+  VALUES(RESERCATION_CODE,#{ id }, #{ year }||'-'||#{ month }||'-'||#{ day } , #{rsv_person}, #{ phone1}||'-'||#{ phone2}||'-'||#{phone3}, #{ email }, #{totalCharge}, SYSDATE, 'N',#{rsvRequest} )	
+  
+  </insert>
+  
+    <insert id="insertTime" parameterType="kr.co.prj.vo.ReservationTimeVO">
+  INSERT INTO RESERVATION_INFO(RESERVATION_NUM, ROOM_NAME, R_TIME, YEAR, MONTH, DAY)
+  VALUES(#{reservation_num},#{room_name},#{r_time},#{year},#{month},#{day})	
+  </insert>
+  
+    <select id="reservationCode" resultType="java.lang.String" >
+   SELECT cur_resercation_code from dual
+  </select>
+  
+  <select id="rsvTimeCheck" resultType="int" parameterType="kr.co.prj.vo.ParamDateVO">
+	select r_Time
+	from RESERVATION_INFO
+	where room_name=#{roomName} and year=#{param_year} and month=#{param_month} and day=#{param_day}
+	order by r_time
+	</select>
+  
+  
+</mapper>

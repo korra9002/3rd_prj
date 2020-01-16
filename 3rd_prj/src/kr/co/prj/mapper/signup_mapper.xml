@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prj.dao.SignUpMapper"> 
+<!-- <resultMap type="kr.co.prj.domain.LoginDomain" id="LoginMap">
+	<result column="user_id" property="id"/>
+	<result column="user_name" property="name"/>
+</resultMap> -->
+<!-- Login테이블에서 번호,제목,작성일,답변플래그를 받아온다. -->
+<select id="SignUp"  parameterType="kr.co.prj.vo.SignUpVO">
+	INSERT INTO member_info(USER_ID, PASSWORD, USER_NAME, PHONE, EMAIL, HINT_CODE, ANSWER, JOIN_DATE, SUSPEND_FLAG)
+	VALUES(#{ user_id }, #{ password }, #{ user_name }, #{ phon1 }||'-'||#{ phon2 }||'-'||#{ phon3 }, #{ email1 }||'@'||#{ email3 }, #{ hint_code }, #{ answer }, sysdate, 'N' )
+</select>
+
+<select id="inputCardInfo"  parameterType="kr.co.prj.vo.CardInfoVO">
+	INSERT INTO card_info(CARD_INFO_CODE, CARD_TYPE_CODE, CARD_NUM1, CARD_NUM2, CARD_NUM3, CARD_NUM4, EX_DATE, CVV, INPUT_DATE, USER_ID)
+	VALUES(card_code, #{ cardTypeCode }, #{ cardNum1 }, #{ cardNum2 },#{ cardNum3 },#{ cardNum4 }, #{ exDate },#{ cvv },sysdate , #{user_id} )
+</select>
+
+
+
+	<resultMap type="kr.co.prj.domain.CardTypeDomain"  id="cardTypeResult">
+	<result column="CARD_TYPE_CODE" property="cardTypeCode"/>
+	<result column="CARD_TYPE" property="cardType"/>
+	</resultMap>
+
+<select id="cardType"  resultMap="cardTypeResult">
+	SELECT CARD_TYPE_CODE, CARD_TYPE
+	FROM CARD_TYPE
+</select>
+
+
+
+</mapper>
+
+
+
